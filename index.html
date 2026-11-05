@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MiGestionSENA - Iniciar Sesión</title>
+  <title>MiGestionSENA</title>
   <style>
     * {
       box-sizing: border-box;
@@ -14,6 +14,10 @@
 
     body {
       background-color: #f4f7f6;
+    }
+
+    /* Contenedor del Login */
+    #login-section {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -53,12 +57,11 @@
       border: 1px solid #cccccc;
       border-radius: 6px;
       font-size: 14px;
-      transition: border-color 0.3s;
     }
 
     .form-group input:focus {
       outline: none;
-      border-color: #39A900; /* Verde institucional SENA de referencia */
+      border-color: #39A900;
     }
 
     button[type="submit"] {
@@ -84,35 +87,73 @@
       margin-top: 15px;
       text-align: center;
     }
+
+    /* Sección de la Web Principal (Oculta por defecto) */
+    #app-content {
+      display: none;
+      padding: 20px;
+    }
+
+    header {
+      background-color: #39A900;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 6px;
+    }
+
+    header button {
+      background-color: #ffffff;
+      color: #39A900;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
-  <div class="login-container">
-    <h2>MiGestionSENA</h2>
-    <form id="login-form">
-      <div class="form-group">
-        <label for="email">Correo Electrónico</label>
-        <input type="email" id="email" required placeholder="correo@sena.edu.co">
-      </div>
-      
-      <div class="form-group">
-        <label for="password">Contraseña</label>
-        <input type="password" id="password" required placeholder="••••••••">
-      </div>
+  <!-- VISTA 1: FORMULARIO DE INICIO DE SESIÓN -->
+  <div id="login-section">
+    <div class="login-container">
+      <h2>MiGestionSENA</h2>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">Correo Electrónico</label>
+          <input type="email" id="email" required placeholder="correo@sena.edu.co">
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" required placeholder="••••••••">
+        </div>
 
-      <button type="submit" id="login-btn">Ingresar</button>
-    </form>
-    <div id="error-message"></div>
+        <button type="submit" id="login-btn">Ingresar</button>
+      </form>
+      <div id="error-message"></div>
+    </div>
   </div>
 
-  <!-- Lógica de Firebase con Módulos ES -->
-  <script type="module">
-    // Importar SDKs necesarios de Firebase desde los CDN oficiales
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  <!-- VISTA 2: CONTENIDO PRINCIPAL DE TU WEB (Se muestra al iniciar sesión) -->
+  <div id="app-content">
+    <header>
+      <h1>Panel de Control - MiGestionSENA</h1>
+      <button id="logout-btn">Cerrar Sesión</button>
+    </header>
+    <main style="margin-top: 20px;">
+      <p>¡Bienvenido al sistema! Aquí puedes integrar el contenido de tu página web original.</p>
+    </main>
+  </div>
 
-    // Configuración oficial de tu proyecto MiGestionSENA obtenida de la consola
+  <!-- LÓGICA DE FIREBASE Y CONTROL DE VISTAS -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyCL_O0UvS-DwgrP4gPO7Rh5qip3142RY1U",
       authDomain: "migestionsena.firebaseapp.com",
@@ -123,39 +164,39 @@
       measurementId: "G-KHHST2S36N"
     };
 
-    // Inicializar Firebase y Auth
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Referencias a los elementos del DOM
+    const loginSection = document.getElementById('login-section');
+    const appContent = document.getElementById('app-content');
     const loginForm = document.getElementById('login-form');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
     const errorMessage = document.getElementById('error-message');
+    const logoutBtn = document.getElementById('logout-btn');
 
-    // Manejar el evento de envío del formulario
+    // Mantener la sesión activa si el usuario recarga la página
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Usuario logueado: Oculta el login y muestra la web
+        loginSection.style.display = 'none';
+        appContent.style.display = 'block';
+      } else {
+        // Usuario deslogueado: Muestra el login y oculta la web
+        loginSection.style.display = 'flex';
+        appContent.style.display = 'none';
+      }
+    });
+
+    // Manejar el evento de inicio de sesión
     loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault(); // Evita recargar la página
-      
-      const email = emailInput.value.trim();
-      const password = passwordInput.value;
-      errorMessage.textContent = ''; // Limpiar mensajes de error previos
+      e.preventDefault();
+      errorMessage.textContent = '';
 
       try {
-        // Intentar autenticación en Firebase
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        
-        console.log("Inicio de sesión exitoso:", user.email);
-        alert("¡Bienvenido a MiGestionSENA!");
-        
-        // Redirección opcional al panel principal o dashboard
-        // window.location.href = "./dashboard.html";
-
+        await signInWithEmailAndPassword(auth, emailInput.value.trim(), passwordInput.value);
+        // El observador onAuthStateChanged se encargará de desplegar la página automáticamente
       } catch (error) {
-        console.error("Error de autenticación:", error.code, error.message);
-        
-        // Traducción de errores comunes para el usuario final
         switch (error.code) {
           case 'auth/invalid-email':
             errorMessage.textContent = "El formato del correo electrónico no es válido.";
@@ -172,6 +213,11 @@
             errorMessage.textContent = "Ocurrió un error al iniciar sesión. Verifica tus datos.";
         }
       }
+    });
+
+    // Botón para cerrar sesión
+    logoutBtn.addEventListener('click', async () => {
+      await signOut(auth);
     });
   </script>
 
