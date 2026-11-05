@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inmobiliaria Futura - Prueba de Bienes Raíces</title>
+    <style>
+        :root {
+            --primary: #1a365d;
+            --secondary: #2b6cb0;
+            --accent: #ecc94b;
+            --text: #2d3748;
+            --light: #f7fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            color: var(--text);
+            background-color: var(--light);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        .hero {
+            background: linear-gradient(rgba(26, 54, 93, 0.7), rgba(26, 54, 93, 0.7)), url('https://unsplash.com') no-repeat center center/cover;
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 0 1rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .search-container {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 1rem;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .search-container select, .search-container button {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            font-size: 1rem;
+            min-width: 150px;
+        }
+
+        .search-container button {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .search-container button:hover {
+            background-color: var(--primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary);
+            font-size: 2rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background-color: var(--accent);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            font-weight: bold;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .price {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .features {
+            display: flex;
+            justify-content: space-between;
+            color: #718096;
+            font-size: 0.9rem;
+            border-top: 1px solid #edf2f7;
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .contact-section {
+            background-color: var(--primary);
+            color: white;
+            padding: 4rem 1rem;
+            text-align: center;
+        }
+
+        .contact-form {
+            max-width: 500px;
+            margin: 2rem auto 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contact-form input, .contact-form textarea {
+            padding: 0.75rem;
+            border-radius: 4px;
+            border: none;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .contact-form button {
+            background-color: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 0.75rem;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: opacity 0.3s;
+        }
+
+        .contact-form button:hover {
+            opacity: 0.9;
+        }
+
+        footer {
+            background-color: #0f172a;
+            color: #94a3b8;
+            text-align: center;
+            padding: 2rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2rem; }
+            .search-container { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">🏠 FuturaRaíces</a>
+        <nav>
+            <a href="#propiedades">Propiedades</a>
+            <a href="#contacto">Contacto</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Encuentra tu hogar ideal</h1>
+        <p>Explora las mejores ofertas de venta en tu zona</p>
+        
+        <div class="search-container">
+            <select id="tipo">
+                <option value="">Tipo de inmueble</option>
+                <option value="casa">Casa</option>
+                <option value="apto">Apartamento</option>
+            </select>
+            <select id="precio">
+                <option value="">Rango de Precio</option>
+                <option value="bajo">Hasta $150,000</option>
+                <option value="alto">Más de $150,000</option>
+            </select>
+            <button onclick="buscar()">Buscar Propiedades</button>
+        </div>
+    </section>
+
+    <main class="container" id="propiedades">
+        <h2 class="section-title">Propiedades Destacadas</h2>
+        
+        <div class="grid">
+            <!-- Tarjeta 1 -->
+            <div class="card">
+                <div class="card-img" style="background-image: url('https://unsplash.com');">
+                    <span class="badge">Venta</span>
+                </div>
+                <div class="card-content">
+                    <p class="price">$245,000</p>
+                    <h3 class="card-title">Residencia Moderna en Zona Norte</h3>
+                    <p style="color: #4a5568; font-size: 0.9rem;">Exclusivo sector residencial con excelente conectividad y vigilancia 24/7.</p>
+                    <div class="features">
+                        <span>🛏️ 3 Hab</span>
+                        <span>🚿 2 Baños</span>
+                        <span>📐 150 m²</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta 2 -->
+            <div class="card">
+                <div class="card-img" style="background-image: url('https://unsplash.com');">
+                    <span class="badge">Venta</span>
+                </div>
+                <div class="card-content">
+                    <p class="price">$135,000</p>
+                    <h3 class="card-title">Apartamento con Vista Panorámica</h3>
+                    <p style="color: #4a5568; font-size: 0.9rem;">Ubicado en piso alto, acabados de lujo y balcón con excelente iluminación natural.</p>
+                    <div class="features">
+                        <span>🛏️ 2 Hab</span>
+                        <span>🚿 2 Baños</span>
+                        <span>📐 85 m²</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta 3 -->
+            <div class="card">
+                <div class="card-img" style="background-image: url('https://unsplash.com');">
+                    <span class="badge">Venta</span>
+                </div>
+                <div class="card-content">
+                    <p class="price">$310,000</p>
+                    <h3 class="card-title">Casa Familiar con Amplio Jardín</h3>
+                    <p style="color: #4a5568; font-size: 0.9rem;">Perfecta para familias, cuenta con patio trasero, zona de BBQ y garaje doble.</p>
+                    <div class="features">
+                        <span>🛏️ 4 Hab</span>
+                        <span>🚿 3 Baños</span>
+                        <span>📐 220 m²</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section class="contact-section" id="contacto">
+        <h2>¿Interesado en vender o comprar?</h2>
