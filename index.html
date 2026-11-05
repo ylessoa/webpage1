@@ -16,7 +16,7 @@
       background-color: #f4f7f6;
     }
 
-    /* Contenedor del Login */
+    /* Pantalla de Inicio de Sesión (Bloqueo inicial) */
     #login-section {
       display: flex;
       justify-content: center;
@@ -94,36 +94,15 @@
       text-align: center;
     }
 
-    /* Sección de la Web Principal (Oculta por defecto hasta iniciar sesión) */
+    /* Contenido Principal de tu Web (Oculto hasta autenticarse) */
     #app-content {
       display: none;
-      padding: 20px;
-    }
-
-    header {
-      background-color: #39A900;
-      color: white;
-      padding: 15px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-radius: 6px;
-    }
-
-    header button {
-      background-color: #ffffff;
-      color: #39A900;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 4px;
-      font-weight: bold;
-      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-  <!-- VISTA 1: FORMULARIO DE INICIO DE SESIÓN -->
+  <!-- VISTA 1: FORMULARIO DE ACCESO -->
   <div id="login-section">
     <div class="login-container">
       <h2>MiGestionSENA</h2>
@@ -144,27 +123,27 @@
     </div>
   </div>
 
-  <!-- VISTA 2: CONTENIDO PRINCIPAL DE LA PÁGINA WEB -->
+  <!-- VISTA 2: TU PÁGINA WEB ORIGINAL (Se muestra al iniciar sesión) -->
   <div id="app-content">
-    <header>
-      <h1>Panel de Control - MiGestionSENA</h1>
-      <button id="logout-btn">Cerrar Sesión</button>
-    </header>
     
-    <main style="margin-top: 20px;">
-      <section>
-        <h2>Bienvenido al sistema de gestión</h2>
-        <p>Aquí se despliega toda la estructura y elementos de tu página web principal con éxito.</p>
-      </section>
+    <!-- PEGA AQUÍ EL CONTENIDO DE TU ARCHIVO ORIGINAL (Tus headers, tablas, secciones, etc.) -->
+    <header style="background-color: #39A900; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center;">
+      <h1>MiGestionSENA - Panel Principal</h1>
+      <button id="logout-btn" style="background-color: #ffffff; color: #39A900; border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; cursor: pointer;">Cerrar Sesión</button>
+    </header>
+
+    <main style="padding: 20px;">
+      <h2>Bienvenido al sistema</h2>
+      <p>Aquí puedes colocar todos los componentes y la estructura visual de tu página web original.</p>
     </main>
+
   </div>
 
-  <!-- LÓGICA DE FIREBASE Y CONTROL DE VISTAS -->
+  <!-- LÓGICA DE FIREBASE -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    // Configuración oficial de tu proyecto MiGestionSENA[cite: 1]
     const firebaseConfig = {
       apiKey: "AIzaSyCL_O0UvS-DwgrP4gPO7Rh5qip3142RY1U",
       authDomain: "migestionsena.firebaseapp.com",
@@ -186,20 +165,20 @@
     const errorMessage = document.getElementById('error-message');
     const logoutBtn = document.getElementById('logout-btn');
 
-    // Escucha el estado de autenticación (mantiene la sesión o conmuta vistas)
+    // Control de visibilidad según la sesión de Firebase
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // Usuario autenticado: Oculta el login por completo y muestra la app
+        // Si hay sesión, oculta el login y muestra tu web
         loginSection.style.display = 'none';
         appContent.style.display = 'block';
       } else {
-        // Usuario no autenticado: Muestra el login y oculta la app
+        // Si no hay sesión, muestra el login y oculta tu web
         loginSection.style.display = 'flex';
         appContent.style.display = 'none';
       }
     });
 
-    // Manejar el evento de envío del formulario de inicio de sesión
+    // Manejar el login con correo y contraseña
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       errorMessage.textContent = '';
@@ -207,7 +186,6 @@
       try {
         await signInWithEmailAndPassword(auth, emailInput.value.trim(), passwordInput.value);
       } catch (error) {
-        console.error("Error en login:", error.code);
         switch (error.code) {
           case 'auth/invalid-email':
             errorMessage.textContent = "El formato del correo electrónico no es válido.";
@@ -226,13 +204,9 @@
       }
     });
 
-    // Botón para cerrar sesión
+    // Botón para salir
     logoutBtn.addEventListener('click', async () => {
-      try {
-        await signOut(auth);
-      } catch (error) {
-        console.error("Error al cerrar sesión", error);
-      }
+      await signOut(auth);
     });
   </script>
 
