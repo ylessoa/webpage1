@@ -22,6 +22,12 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      width: 100vw;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #f4f7f6;
+      z-index: 9999;
     }
 
     .login-container {
@@ -148,7 +154,7 @@
     <main style="margin-top: 20px;">
       <section>
         <h2>Bienvenido al sistema de gestión</h2>
-        <p>Aquí puedes integrar las secciones, tablas o elementos visuales de tu proyecto original.</p>
+        <p>Aquí se despliega toda la estructura y elementos de tu página web principal con éxito.</p>
       </section>
     </main>
   </div>
@@ -158,7 +164,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    // Configuración oficial de tu proyecto en Firebase
+    // Configuración oficial de tu proyecto MiGestionSENA[cite: 1]
     const firebaseConfig = {
       apiKey: "AIzaSyCL_O0UvS-DwgrP4gPO7Rh5qip3142RY1U",
       authDomain: "migestionsena.firebaseapp.com",
@@ -180,18 +186,20 @@
     const errorMessage = document.getElementById('error-message');
     const logoutBtn = document.getElementById('logout-btn');
 
-    // Mantener la sesión activa de forma automática
+    // Escucha el estado de autenticación (mantiene la sesión o conmuta vistas)
     onAuthStateChanged(auth, (user) => {
       if (user) {
+        // Usuario autenticado: Oculta el login por completo y muestra la app
         loginSection.style.display = 'none';
         appContent.style.display = 'block';
       } else {
+        // Usuario no autenticado: Muestra el login y oculta la app
         loginSection.style.display = 'flex';
         appContent.style.display = 'none';
       }
     });
 
-    // Manejar el evento de inicio de sesión
+    // Manejar el evento de envío del formulario de inicio de sesión
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       errorMessage.textContent = '';
@@ -199,6 +207,7 @@
       try {
         await signInWithEmailAndPassword(auth, emailInput.value.trim(), passwordInput.value);
       } catch (error) {
+        console.error("Error en login:", error.code);
         switch (error.code) {
           case 'auth/invalid-email':
             errorMessage.textContent = "El formato del correo electrónico no es válido.";
@@ -219,7 +228,11 @@
 
     // Botón para cerrar sesión
     logoutBtn.addEventListener('click', async () => {
-      await signOut(auth);
+      try {
+        await signOut(auth);
+      } catch (error) {
+        console.error("Error al cerrar sesión", error);
+      }
     });
   </script>
 
